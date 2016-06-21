@@ -24,7 +24,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-        input = cms.untracked.int32(30000) #Changed from 2141 to 300 since thats what was in SignalSampleGenerator.py
+        input = cms.untracked.int32(41600) #H750a09 41600 is the number for 300 after filtered.
 )
 
 #so the seed is randomized for each job
@@ -55,7 +55,7 @@ process.RAWSIMoutput = cms.OutputModule("PoolOutputModule",
     splitLevel = cms.untracked.int32(0),
     eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
     outputCommands = process.RAWSIMEventContent.outputCommands,
-    fileName = cms.untracked.string('NMSSM_h300_a9_ggH_JOBNUM.root'),
+    fileName = cms.untracked.string('NMSSM_h750_a9_ggH_JOBNUM.root'),
     dataset = cms.untracked.PSet(
         filterName = cms.untracked.string(''),
         dataTier = cms.untracked.string('GEN-SIM')
@@ -82,8 +82,9 @@ process.generator = cms.EDFilter("Pythia8GeneratorFilter",
     PythiaParameters = cms.PSet(
         pythia8CommonSettings = cms.vstring('Main:timesAllowErrors = 10000', 
             'Check:epTolErr = 0.01', 
-            'SLHA:keepSM = on', 
-            'SLHA:minMassSM = 1000.', 
+            'Beams:setProductionScalesFromLHEF = off',
+  #          'SLHA:keepSM = on', 
+  #          'SLHA:minMassSM = 1000.', 
             'ParticleDecays:limitTau0 = on', 
             'ParticleDecays:tau0Max = 10', 
             'ParticleDecays:allowPhotonRadiation = on'),
@@ -93,17 +94,18 @@ process.generator = cms.EDFilter("Pythia8GeneratorFilter",
             'MultipartonInteractions:ecmPow=0.25208', 
             'MultipartonInteractions:expPow=1.6'),
         processParameters = cms.vstring('Higgs:useBSM = on', 
-            'HiggsBSM:gg2H2 = on', 
-            '35:m0 = 300 ',
-            '36:m0 = 9.0 ',
-	    '36:mMin = 1.0',
-	    '25:m0 = 500',
-	    '45:m0 = 500',
-	    '46:m0 = 500',
+           'HiggsBSM:gg2H2 = on', 
+	    '35:m0 = 750.',
 	    '35:onMode = off',
-    	    '35:onIfMatch = 36 36',
-            '36:onMode = off', 
-            '36:onIfAny=15 -15 13 -13'),
+     #       '35:mWidth = 35',
+      #      '35:doForceWidth = on',
+      #      '36:mWidth = 0.09',
+      #      '36:doForceWidth = on'
+            '35:onIfMatch = 36 36',
+	    '36:mMin = 3',
+  	    '36:m0 = 9.',
+            '36:onMode = off',
+            '36:onIfAny=13 -13 15 -15'),
         parameterSets = cms.vstring('pythia8CommonSettings', 
             'pythia8CUEP8M1Settings', 
             'processParameters')
